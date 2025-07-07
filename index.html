@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página HTML Comum</title>
+</head>
+<body>
+    <h1>Bem-vindo à nossa página!</h1>
+    <p>Essa página parece comum, mas está monitorando sua conexão...</p>
+    <p>Aguarde enquanto obtemos algumas informações...</p>
+
+    <script>
+        // Usando a API do IPinfo para capturar o IP
+        fetch('https://ipinfo.io/json?token=255dad273e34a5')  // Substitua pelo seu token
+            .then(response => response.json())
+            .then(data => {
+                console.log("IP capturado: " + data.ip);  // Exibe o IP no console
+
+                // Envia o IP para o seu servidor ou log
+                fetch('http://localhost:3000/enviar-ip', {  // URL do servidor local
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ip: data.ip,
+                        cidade: data.city,
+                        provedor: data.org
+                    })
+                }).then(res => {
+                    console.log("IP enviado com sucesso!");
+                }).catch(err => {
+                    console.error('Erro ao enviar IP:', err);
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao capturar o IP:', error);
+            });
+    </script>
+</body>
+</html>
